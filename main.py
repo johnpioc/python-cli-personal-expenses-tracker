@@ -1,8 +1,27 @@
-def view_transactions() -> None:
-    pass
+from models.book import Book
+from models.transaction import Transaction
+from database.db_handler import get_all_transactions
+from typing import List
+
+def initialise_book() -> Book:
+    book: Book = Book()
+    transactions: List[Transaction] = get_all_transactions()
+
+    for transaction in transactions:
+        book.insert_transaction(transaction)
+
+    return book
+
+def view_transactions(book: Book) -> None:
+    transactions = book.transactions
+
+    for transaction in transactions:
+        print(transaction.date)
 
 def main() -> None:
     print("Welcome to your Personal Finances Tracker!\n")
+
+    book = initialise_book()
 
     while True:
         print("Type in one of the commands below.\n")
@@ -22,7 +41,7 @@ def main() -> None:
 
         match user_input:
             case "view":
-                view_transactions()
+                view_transactions(book)
             case "quit":
                 break
 

@@ -1,6 +1,5 @@
 class Transaction:
-    def __init__(self, id: str, date: str, amount: float, description: str,
-                 category: str, payment_method: str):
+    def __init__(self, id: str, date: str, amount: float, description: str,category: str, payment_method: str) -> None:
         self.id: str = id
         self.date: str = date
         self.amount: float = amount
