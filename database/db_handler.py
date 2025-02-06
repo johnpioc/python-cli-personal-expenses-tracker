@@ -1,9 +1,9 @@
 import os
 from supabase import create_client, Client
 from dotenv import load_dotenv
-
+from models.types import SupabaseTransactionDict
+from typing import List
 from models.transaction import Transaction
-from typing import List, TypedDict
 
 load_dotenv("config.env")
 
@@ -12,16 +12,8 @@ key: str = os.environ.get("SUPABASE_KEY")
 
 supabase: Client = create_client(url, key)
 
-class SupabaseTransactionDict(TypedDict):
-    id: str
-    date: str
-    amount: float
-    description: str
-    category: str
-    payment_method: str
-
 def get_all_transactions() -> List[Transaction]:
-    response = supabase.table("transactions").select("*").limit(100).execute()
+    response = supabase.table("transactions").select("*").execute()
     supabase_transactions: List[SupabaseTransactionDict] = response.data
 
     transactions: List[Transaction] = []

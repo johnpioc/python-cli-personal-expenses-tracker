@@ -2,6 +2,8 @@ from models.book import Book
 from models.transaction import Transaction
 from database.db_handler import get_all_transactions
 from typing import List
+from tabulate import tabulate
+import math
 
 def initialise_book() -> Book:
     book: Book = Book()
@@ -14,9 +16,42 @@ def initialise_book() -> Book:
 
 def view_transactions(book: Book) -> None:
     transactions = book.transactions
+    page: int = 0
+    table_headers: List[str] = ["Row no.", "Date", "Amount", "Description", "Category", "Payment Method"]
+    last_page: int = math.ceil(len(transactions) / 100) - 1
 
-    for transaction in transactions:
-        print(transaction.date)
+    while True:
+        table_data: List[int, str, float, str, str, str] = []
+
+        for i in range(100 * page, 100 * page + 100):
+            if (len(transactions) - 1 < i): break
+
+            current_transaction: Transaction =  transactions[i]
+            table_data.append([
+                i + 1,
+                current_transaction.date,
+                current_transaction.amount,
+                current_transaction.description[:20] + "...",
+                current_transaction.category,
+                current_transaction.payment_method
+            ])
+
+        print(tabulate(table_data, headers=table_headers, tablefmt="fancy_grid"))
+
+        print("\nSelect one of the view commands below:\n")
+        print("left - view the previous 100 transactions")
+        print("right - view the next 100 transactions")
+        print("quit - go back to main menu\n")
+
+        user_input = input("Enter your command: ")
+
+        match user_input:
+            case "left":
+                if page != 0: page -= 1
+            case "right":
+                if last_page > page: page += 1
+            case "quit":
+                break
 
 def main() -> None:
     print("Welcome to your Personal Finances Tracker!\n")

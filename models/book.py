@@ -16,17 +16,24 @@ class Book:
         for idx, current_transaction in enumerate(self.transactions):
             current_year: int = current_transaction.get_year()
             if year > current_year: continue
+            elif year < current_year:
+                index_to_insert = idx
+                break
+            else:
+                current_month: int = current_transaction.get_month()
+                if month > current_month: continue
+                elif month < current_month:
+                    index_to_insert = idx
+                    break
+                else:
+                    current_day: int = current_transaction.get_day()
+                    if day > current_day: continue
+                    else:
+                        index_to_insert = idx
+                        break
 
-            current_month: int = current_transaction.get_month()
-            if month > current_month: continue
 
-            current_day: int = current_transaction.get_day()
-            if day > current_day: continue
-
-            index_to_insert = idx
-            break
-
-        if index_to_insert == -1:
+        if index_to_insert != -1:
             self.transactions.insert(index_to_insert, transaction)
         else:
             self.transactions.append(transaction)

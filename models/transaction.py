@@ -9,7 +9,7 @@ class Transaction:
         return
 
     def get_day(self) -> int:
-        return int(self.date[0:2])
+        return int(self.date[:2])
 
     def get_month(self) -> int:
         return int(self.date[3:5])
