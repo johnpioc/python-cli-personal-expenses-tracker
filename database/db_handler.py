@@ -1,10 +1,13 @@
 import os
+import time
+
 from supabase import create_client, Client
 from dotenv import load_dotenv
 from typing import List
 
 from models.types import SupabaseTransactionDict
 from models.transaction import Transaction
+from models.book import Book
 
 load_dotenv("config.env")
 
@@ -34,8 +37,30 @@ def get_all_transactions() -> List[Transaction]:
 
         return transactions
     except Exception as e:
-        print(f"Error occured: {e}")
+        print(f"Error occured retrieving transactions: {e}")
         return []
 
-def edit_transaction(transactionId: str) -> bool:
-    pass
+def edit_transaction(updated_transaction: Transaction) -> bool:
+    try:
+        response = supabase.table("transactions").update({
+            "date": updated_transaction.date,
+            "amount": updated_transaction.amount,
+            "description": updated_transaction.description,
+            "category": updated_transaction.category,
+            "payment_method": updated_transaction.payment_method
+        }).eq("id", updated_transaction.id).execute()
+
+        return True
+    except Exception as e:
+        print(f"Error occured editing a transaction: {e}")
+        time.sleep(2)
+        return False
+
+def delete_transaction(transaction_to_delete: Transaction) -> bool:
+     try:
+         response = supabase.table("transactions").delete().eq("id", transaction_to_delete.id).execute()
+         return True
+     except Exception as e:
+         print(f"Error occured editing a transaction: {e}")
+         time.sleep(2)
+         return False
