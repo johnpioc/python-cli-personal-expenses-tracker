@@ -40,6 +40,23 @@ def get_all_transactions() -> List[Transaction]:
         print(f"Error occured retrieving transactions: {e}")
         return []
 
+def add_transaction(new_transaction: Transaction) -> bool:
+    try:
+        supabase.table("transactions").insert({
+            "id": new_transaction.id,
+            "date": new_transaction.date,
+            "amount": new_transaction.amount,
+            "description": new_transaction.description,
+            "category": new_transaction.category,
+            "payment_method": new_transaction.payment_method
+        }).execute()
+
+        return True
+    except Exception as e:
+        print(f"Error adding new transaction: {e}")
+        time.sleep(2)
+        return False
+
 def edit_transaction(updated_transaction: Transaction) -> bool:
     try:
         response = supabase.table("transactions").update({
